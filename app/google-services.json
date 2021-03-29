@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "454477277200",
+    "project_id": "android-kotlin-text",
+    "storage_bucket": "android-kotlin-text.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:454477277200:android:2963e9f8d82466a51a4295",
+        "android_client_info": {
+          "package_name": "com.wolfe.kotlinmessenger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "454477277200-ua2pr5ghn3d2r9hhps5is9fg35ba39ek.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnNoQFFvIU0W-Ghc5On2VSUcKd3t6URAg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "454477277200-ua2pr5ghn3d2r9hhps5is9fg35ba39ek.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
