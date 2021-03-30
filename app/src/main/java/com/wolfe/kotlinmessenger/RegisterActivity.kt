@@ -28,10 +28,6 @@ class RegisterActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            Log.d(TAG, "Username is: $username")
-            Log.d(TAG, "Email is: $email")
-            Log.d(TAG, "Password is: $password")
-
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(email,password)
                 .addOnCompleteListener {
                     if(!it.isSuccessful) return@addOnCompleteListener

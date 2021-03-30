@@ -29,6 +29,7 @@
         android:layout_marginEnd="32dp"
         android:text="Login"
         app:backgroundTint="#3F51B5"
+        android:background="@drawable/rounded_edit_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -41,7 +42,7 @@
         android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
-        android:background="#FFFFFF"
+        android:background="@drawable/rounded_edit_text"
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
@@ -49,16 +50,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/usernameLogin" />
+        app:layout_constraintTop_toBottomOf="@+id/emailLogin" />
 
     <EditText
-        android:id="@+id/usernameLogin"
+        android:id="@+id/emailLogin"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="156dp"
         android:layout_marginEnd="32dp"
-        android:background="#FFFFFF"
+        android:background="@drawable/rounded_edit_text"
         android:ems="10"
         android:hint="Username"
         android:inputType="textPersonName"
