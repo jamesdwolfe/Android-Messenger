@@ -17,36 +17,44 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         submitLogin.setOnClickListener {
-            val email = emailLogin.text.toString()
-            val password = passwordLogin.text.toString()
-
-            if(email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this,
-                        "Login failed: Please enter an email and password",
-                        Toast.LENGTH_LONG).show()
-                return@setOnClickListener
-            }
-
-            FirebaseAuth.getInstance().signInWithEmailAndPassword(email,password)
-                    .addOnCompleteListener {
-                        if(!it.isSuccessful) return@addOnCompleteListener
-                        Toast.makeText(this,
-                                "Login success",
-                                Toast.LENGTH_LONG).show()
-                        Log.d(TAG,"Login success: UID=${it.result!!.user.uid}")
-                    }
-                    .addOnFailureListener {
-                        Toast.makeText(this,
-                                "Login failed: ${it.message}",
-                                Toast.LENGTH_LONG).show()
-                        Log.d(TAG,"Login failed: ${it.message}")
-                    }
+            loginUser()
         }
 
         registerLogin.setOnClickListener {
-            Log.d(TAG, "Launch register activity")
-            finish()
+            moveToRegister()
         }
+    }
+
+    private fun moveToRegister() {
+        Log.d(TAG, "Launch register activity")
+        finish()
+    }
+
+    private fun loginUser() {
+        val email = emailLogin.text.toString()
+        val password = passwordLogin.text.toString()
+
+        if (email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this,
+                    "Login failed: Please enter an email and password",
+                    Toast.LENGTH_LONG).show()
+            return
+        }
+
+        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener {
+                    if (!it.isSuccessful) return@addOnCompleteListener
+                    Toast.makeText(this,
+                            "Login success",
+                            Toast.LENGTH_LONG).show()
+                    Log.d(TAG, "Login success: UID=${it.result!!.user.uid}")
+                }
+                .addOnFailureListener {
+                    Toast.makeText(this,
+                            "Login failed: ${it.message}",
+                            Toast.LENGTH_LONG).show()
+                    Log.d(TAG, "Login failed: ${it.message}")
+                }
     }
 
 }
