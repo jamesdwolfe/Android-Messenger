@@ -71,7 +71,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun registerUser() {
-        val username = usernameRegister.text.toString()
+        //val username = usernameRegister.text.toString()
         val email = emailRegister.text.toString()
         val password = passwordRegister.text.toString()
 
@@ -85,7 +85,7 @@ class RegisterActivity : AppCompatActivity() {
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener {
                     if (!it.isSuccessful) return@addOnCompleteListener
-                    Log.d(TAG, "Registration success: UID=${it.result!!.user.uid}")
+                    Log.d(TAG, "Registration success: UID=${it.result?.user?.uid}")
                     uploadImageToFirebase()
                 }
                 .addOnFailureListener {
@@ -121,6 +121,10 @@ class RegisterActivity : AppCompatActivity() {
         ref.setValue(user)
                 .addOnSuccessListener {
                     Log.d(TAG,"User added to Firebase Database")
+
+                    val intent = Intent(this, LatestMessagesActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(intent)
                 }
                 .addOnFailureListener {
                     Log.d(TAG, "Failed to add user to Firebase Database")

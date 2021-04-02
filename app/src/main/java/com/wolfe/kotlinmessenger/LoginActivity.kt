@@ -47,7 +47,7 @@ class LoginActivity : AppCompatActivity() {
                     Toast.makeText(this,
                             "Login success",
                             Toast.LENGTH_LONG).show()
-                    Log.d(TAG, "Login success: UID=${it.result!!.user.uid}")
+                    Log.d(TAG, "Login success: UID=${it.result?.user?.uid}")
                 }
                 .addOnFailureListener {
                     Toast.makeText(this,
