@@ -24,8 +24,6 @@ import java.util.*
 private val TAG = RegisterActivity::class.qualifiedName
 private var imageUri: Uri? = null
 
-class User(val uid: String, val username: String, val profileImageUrl: String)
-
 class RegisterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
