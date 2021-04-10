@@ -33,10 +33,12 @@ class NewMessageActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_message)
-
         supportActionBar?.title = "Select User"
-
         fetchUsers()
+    }
+
+    companion object {
+        const val USER_KEY = "USER_KEY"
     }
 
     private fun fetchUsers(){
@@ -53,7 +55,9 @@ class NewMessageActivity : AppCompatActivity() {
                 }
 
                 adapter.setOnItemClickListener { item, view ->
+                    val userItem = item as UserItem
                     val intent = Intent(view.context, ChatLogActivity::class.java)
+                    intent.putExtra(USER_KEY, userItem.user)
                     startActivity(intent)
                     finish()
                 }
