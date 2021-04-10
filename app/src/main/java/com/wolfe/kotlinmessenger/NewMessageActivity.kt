@@ -1,9 +1,9 @@
 package com.wolfe.kotlinmessenger
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import androidx.recyclerview.widget.RecyclerView.*
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -50,6 +50,12 @@ class NewMessageActivity : AppCompatActivity() {
                     Log.d(TAG, it.toString())
                     val user = it.getValue(User::class.java)
                     if (user != null) adapter.add(UserItem(user))
+                }
+
+                adapter.setOnItemClickListener { item, view ->
+                    val intent = Intent(view.context, ChatLogActivity::class.java)
+                    startActivity(intent)
+                    finish()
                 }
 
                 newMessageRecyclerView.adapter = adapter
