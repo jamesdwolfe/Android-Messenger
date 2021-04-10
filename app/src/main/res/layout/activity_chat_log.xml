@@ -41,8 +41,6 @@
         android:layout_marginBottom="16dp"
         android:background="@color/purple_500"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/messageChatLog"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
