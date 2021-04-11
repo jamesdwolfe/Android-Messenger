@@ -1,4 +1,4 @@
-package com.wolfe.kotlinmessenger
+package com.wolfe.kotlinmessenger.objects
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

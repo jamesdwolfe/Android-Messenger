@@ -3,21 +3,17 @@ package com.wolfe.kotlinmessenger
 import android.app.Activity
 import android.content.Intent
 import android.graphics.ImageDecoder
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
-import android.media.Image
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import com.wolfe.kotlinmessenger.objects.User
 import kotlinx.android.synthetic.main.activity_register.*
 import java.util.*
 

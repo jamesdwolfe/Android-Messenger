@@ -29,6 +29,7 @@
         android:background="@drawable/rounded_edit_text"
         android:padding="16dp"
         android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec erat et felis laoreet mattis."
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/fromImage"
