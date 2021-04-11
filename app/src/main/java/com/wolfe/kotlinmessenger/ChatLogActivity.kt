@@ -8,22 +8,22 @@ import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.ktx.Firebase
+import com.squareup.picasso.Picasso
 import com.wolfe.kotlinmessenger.objects.ChatMessage
 import com.wolfe.kotlinmessenger.objects.User
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.activity_chat_log.*
-import kotlinx.android.synthetic.main.activity_register.*
 import kotlinx.android.synthetic.main.chat_from.view.*
 import kotlinx.android.synthetic.main.chat_to.view.*
 
 private val TAG = ChatLogActivity::class.qualifiedName
 
-class ChatItemFrom(val text: String): Item<GroupieViewHolder>(){
+class ChatItemFrom(val text: String, private val user: User): Item<GroupieViewHolder>(){
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.itemView.fromMessage.text = text
+        Picasso.get().load(user.profileImageUrl).into(viewHolder.itemView.fromImage)
     }
 
     override fun getLayout(): Int {
@@ -32,9 +32,10 @@ class ChatItemFrom(val text: String): Item<GroupieViewHolder>(){
 
 }
 
-class ChatItemTo(val text: String): Item<GroupieViewHolder>(){
+class ChatItemTo(val text: String, private val user: User): Item<GroupieViewHolder>(){
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.itemView.toMessage.text = text
+        Picasso.get().load(user.profileImageUrl).into(viewHolder.itemView.toImage)
     }
 
     override fun getLayout(): Int {
@@ -45,14 +46,17 @@ class ChatItemTo(val text: String): Item<GroupieViewHolder>(){
 
 class ChatLogActivity : AppCompatActivity() {
     val adapter = GroupAdapter<GroupieViewHolder>()
+    var fromUser: User? = null
+    var toUser: User? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_log)
         recyclerViewChatLog.adapter = adapter
 
-        val user = intent.getParcelableExtra<User>(NewMessageActivity.USER_KEY)
-        supportActionBar?.title = user?.username
+        fromUser = LatestMessagesActivity.currentUser
+        toUser = intent.getParcelableExtra<User>(NewMessageActivity.USER_KEY)
+        supportActionBar?.title = toUser?.username
 
         listenForMessages()
 
@@ -65,20 +69,18 @@ class ChatLogActivity : AppCompatActivity() {
 
     private fun listenForMessages() {
         val ref = FirebaseDatabase.getInstance().getReference("/messages")
-        val fromId = FirebaseAuth.getInstance().uid
-        val toId = intent.getParcelableExtra<User>(NewMessageActivity.USER_KEY)?.uid
-        if(fromId == null || toId == null) return
+        if(fromUser == null || toUser == null || fromUser!!.uid == null || toUser!!.uid == null) return
 
         ref.addChildEventListener(object: ChildEventListener{
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val chatMessage = snapshot.getValue(ChatMessage::class.java)
                 if(chatMessage != null
-                        && (fromId == chatMessage.fromId || fromId == chatMessage.toId)
-                        && (toId == chatMessage.fromId || toId == chatMessage.toId)){
-                    if(fromId == chatMessage.fromId){
-                        adapter.add(ChatItemTo(chatMessage.text))
+                        && (fromUser!!.uid == chatMessage.fromId || fromUser!!.uid == chatMessage.toId)
+                        && (toUser!!.uid == chatMessage.fromId || toUser!!.uid == chatMessage.toId)){
+                    if(fromUser!!.uid == chatMessage.fromId){
+                        adapter.add(ChatItemFrom(chatMessage.text, fromUser!!))
                     } else {
-                        adapter.add(ChatItemFrom(chatMessage.text))
+                        adapter.add(ChatItemTo(chatMessage.text, toUser!!))
                     }
                 }
             }
@@ -87,7 +89,6 @@ class ChatLogActivity : AppCompatActivity() {
             override fun onChildRemoved(snapshot: DataSnapshot) {}
             override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
             override fun onCancelled(error: DatabaseError) {}
-
         })
 
     }

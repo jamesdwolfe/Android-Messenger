@@ -52,7 +52,7 @@ class NewMessageActivity : AppCompatActivity() {
                 snapshot.children.forEach {
                     Log.d(TAG, it.toString())
                     val user = it.getValue(User::class.java)
-                    if (user != null) adapter.add(UserItem(user))
+                    if (user != null && user.uid != LatestMessagesActivity.currentUser!!.uid) adapter.add(UserItem(user))
                 }
 
                 adapter.setOnItemClickListener { item, view ->
@@ -66,10 +66,7 @@ class NewMessageActivity : AppCompatActivity() {
                 newMessageRecyclerView.adapter = adapter
             }
 
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-
+            override fun onCancelled(error: DatabaseError) {}
         })
     }
 }
