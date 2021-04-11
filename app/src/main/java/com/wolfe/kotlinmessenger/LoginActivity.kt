@@ -1,5 +1,6 @@
 package com.wolfe.kotlinmessenger
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -48,6 +49,10 @@ class LoginActivity : AppCompatActivity() {
                             "Login success",
                             Toast.LENGTH_LONG).show()
                     Log.d(TAG, "Login success: UID=${it.result?.user?.uid}")
+
+                    val intent = Intent(this, LatestMessagesActivity::class.java)
+                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                    startActivity(intent)
                 }
                 .addOnFailureListener {
                     Toast.makeText(this,

@@ -29,7 +29,6 @@ class ChatItemFrom(val text: String, private val user: User): Item<GroupieViewHo
     override fun getLayout(): Int {
         return R.layout.chat_from
     }
-
 }
 
 class ChatItemTo(val text: String, private val user: User): Item<GroupieViewHolder>(){
@@ -41,7 +40,6 @@ class ChatItemTo(val text: String, private val user: User): Item<GroupieViewHold
     override fun getLayout(): Int {
         return R.layout.chat_to
     }
-
 }
 
 class ChatLogActivity : AppCompatActivity() {
@@ -68,15 +66,15 @@ class ChatLogActivity : AppCompatActivity() {
     }
 
     private fun listenForMessages() {
-        val ref = FirebaseDatabase.getInstance().getReference("/messages")
-        if(fromUser == null || toUser == null || fromUser!!.uid == null || toUser!!.uid == null) return
+        val fromId = fromUser?.uid
+        val toId = toUser?.uid
+        if(fromUser == null || toUser == null || fromId == null || toId == null) return
+        val ref = FirebaseDatabase.getInstance().getReference("/messages/$fromId/$toId")
 
         ref.addChildEventListener(object: ChildEventListener{
             override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
                 val chatMessage = snapshot.getValue(ChatMessage::class.java)
-                if(chatMessage != null
-                        && (fromUser!!.uid == chatMessage.fromId || fromUser!!.uid == chatMessage.toId)
-                        && (toUser!!.uid == chatMessage.fromId || toUser!!.uid == chatMessage.toId)){
+                if(chatMessage != null) {
                     if(fromUser!!.uid == chatMessage.fromId){
                         adapter.add(ChatItemFrom(chatMessage.text, fromUser!!))
                     } else {
@@ -94,21 +92,48 @@ class ChatLogActivity : AppCompatActivity() {
     }
 
     private fun performSendMessage() {
-        val ref = FirebaseDatabase.getInstance().getReference("/messages").push()
-        val fromId = FirebaseAuth.getInstance().uid
-        val toId = intent.getParcelableExtra<User>(NewMessageActivity.USER_KEY)?.uid
-        if(fromId == null || toId == null) return
+        val fromId = fromUser?.uid
+        val toId = toUser?.uid
+        if(fromUser == null || toUser == null || fromId == null || toId == null) return
+        val ref = FirebaseDatabase.getInstance().getReference("/messages/$fromId/$toId").push()
+        val refTo = FirebaseDatabase.getInstance().getReference("/messages/$toId/$fromId").push()
 
         val text = messageChatLog.text.toString()
         val chatMessage = ChatMessage(ref.key!!, fromId, toId, text, System.currentTimeMillis())
 
         ref.setValue(chatMessage)
                 .addOnSuccessListener {
-                    Log.d(TAG,"Upload Message Success: ${ref.key}")
-                    messageChatLog.setText("")
+                    Log.d(TAG,"Upload Message Success 1/2: ${ref.key}")
+                    refTo.setValue(chatMessage)
+                            .addOnSuccessListener {
+                                Log.d(TAG,"Upload Message Success 2/2: ${ref.key}")
+                                messageChatLog.text.clear()
+                                recyclerViewChatLog.scrollToPosition(adapter.itemCount-1)
+                            }
+                            .addOnFailureListener {
+                                Log.d(TAG,"Upload Message Failure 2/2: ${it.message}")
+                            }
                 }
                 .addOnFailureListener {
-                    Log.d(TAG,"Upload Message Failure: ${it.message}")
+                    Log.d(TAG,"Upload Message Failure 1/2: ${it.message}")
+                }
+
+        val refLatest = FirebaseDatabase.getInstance().getReference("/latest-messages/$fromId/$toId")
+        val refLatestTo = FirebaseDatabase.getInstance().getReference("/latest-messages/$toId/$fromId")
+
+        refLatest.setValue(chatMessage)
+                .addOnSuccessListener {
+                    Log.d(TAG,"Upload Latest Message Success 1/2: ${ref.key}")
+                    refLatestTo.setValue(chatMessage)
+                            .addOnSuccessListener {
+                                Log.d(TAG,"Upload Latest Message Success 2/2: ${ref.key}")
+                            }
+                            .addOnFailureListener {
+                                Log.d(TAG,"Upload Latest Message Failure 2/2: ${it.message}")
+                            }
+                }
+                .addOnFailureListener {
+                    Log.d(TAG,"Upload Latest Message Failure 1/2: ${it.message}")
                 }
     }
 }
