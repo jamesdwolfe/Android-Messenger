@@ -15,12 +15,13 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import kotlinx.android.synthetic.main.activity_chat_log.*
+import kotlinx.android.synthetic.main.activity_new_message.*
 import kotlinx.android.synthetic.main.chat_from.view.*
 import kotlinx.android.synthetic.main.chat_to.view.*
 
 private val TAG = ChatLogActivity::class.qualifiedName
 
-class ChatItemFrom(val text: String, private val user: User): Item<GroupieViewHolder>(){
+class ChatItemFrom(private val text: String, private val user: User): Item<GroupieViewHolder>(){
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.itemView.fromMessage.text = text
         Picasso.get().load(user.profileImageUrl).into(viewHolder.itemView.fromImage)
@@ -31,7 +32,7 @@ class ChatItemFrom(val text: String, private val user: User): Item<GroupieViewHo
     }
 }
 
-class ChatItemTo(val text: String, private val user: User): Item<GroupieViewHolder>(){
+class ChatItemTo(private val text: String, private val user: User): Item<GroupieViewHolder>(){
     override fun bind(viewHolder: GroupieViewHolder, position: Int) {
         viewHolder.itemView.toMessage.text = text
         Picasso.get().load(user.profileImageUrl).into(viewHolder.itemView.toImage)
@@ -43,7 +44,7 @@ class ChatItemTo(val text: String, private val user: User): Item<GroupieViewHold
 }
 
 class ChatLogActivity : AppCompatActivity() {
-    val adapter = GroupAdapter<GroupieViewHolder>()
+    private val adapter = GroupAdapter<GroupieViewHolder>()
     var fromUser: User? = null
     var toUser: User? = null
 
@@ -80,6 +81,7 @@ class ChatLogActivity : AppCompatActivity() {
                     } else {
                         adapter.add(ChatItemTo(chatMessage.text, toUser!!))
                     }
+                    recyclerViewChatLog.scrollToPosition(adapter.itemCount-1)
                 }
             }
 
@@ -108,7 +110,6 @@ class ChatLogActivity : AppCompatActivity() {
                             .addOnSuccessListener {
                                 Log.d(TAG,"Upload Message Success 2/2: ${ref.key}")
                                 messageChatLog.text.clear()
-                                recyclerViewChatLog.scrollToPosition(adapter.itemCount-1)
                             }
                             .addOnFailureListener {
                                 Log.d(TAG,"Upload Message Failure 2/2: ${it.message}")

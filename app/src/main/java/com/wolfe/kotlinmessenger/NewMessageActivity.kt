@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -13,6 +14,8 @@ import com.wolfe.kotlinmessenger.objects.User
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
+import kotlinx.android.synthetic.main.activity_chat_log.*
+import kotlinx.android.synthetic.main.activity_latest_messages.*
 import kotlinx.android.synthetic.main.activity_new_message.*
 import kotlinx.android.synthetic.main.user_row_new_message.view.*
 
@@ -31,10 +34,14 @@ class UserItem(val user: User): Item<GroupieViewHolder>(){
 }
 
 class NewMessageActivity : AppCompatActivity() {
+    private val adapter = GroupAdapter<GroupieViewHolder>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_message)
         supportActionBar?.title = "Select User"
+        newMessageRecyclerView.adapter = adapter
+        newMessageRecyclerView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         fetchUsers()
     }
 
@@ -47,8 +54,6 @@ class NewMessageActivity : AppCompatActivity() {
 
         ref.addListenerForSingleValueEvent(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val adapter = GroupAdapter<GroupieViewHolder>()
-
                 snapshot.children.forEach {
                     Log.d(TAG, it.toString())
                     val user = it.getValue(User::class.java)
@@ -56,14 +61,12 @@ class NewMessageActivity : AppCompatActivity() {
                 }
 
                 adapter.setOnItemClickListener { item, view ->
-                    val userItem = item as UserItem
                     val intent = Intent(view.context, ChatLogActivity::class.java)
+                    val userItem = item as UserItem
                     intent.putExtra(USER_KEY, userItem.user)
                     startActivity(intent)
                     finish()
                 }
-
-                newMessageRecyclerView.adapter = adapter
             }
 
             override fun onCancelled(error: DatabaseError) {}
