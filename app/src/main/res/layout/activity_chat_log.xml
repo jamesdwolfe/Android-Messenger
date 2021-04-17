@@ -39,7 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="16dp"
-        android:background="@color/purple_500"
+        android:background="#FF5722"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@+id/messageChatLog"
         app:layout_constraintEnd_toEndOf="parent"
